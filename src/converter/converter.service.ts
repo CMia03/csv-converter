@@ -52,18 +52,4 @@ export class ConverterService {
       throw error;
     }
   }
-
-  async convertJsonToCsv(jsonData: any[], outputPath: string): Promise<void> {
-    try {
-      const fields = ['name', 'age', 'city']; 
-      const opts = { fields, delimiter: ';' }; 
-      const csv = json2csv.parse(jsonData, opts);
-      const outputStream = createWriteStream(outputPath);
-      outputStream.write(csv);
-      outputStream.end();
-    } catch (error) {
-      throw new Error(`Error converting JSON to CSV: ${error.message}`);
-    }
-  }
-
 }

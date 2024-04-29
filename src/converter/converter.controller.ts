@@ -101,17 +101,4 @@ export class ConverterController {
       });
     }
   }
-
-  @Get('convert')
-  async convertJsonToCsv(): Promise<string> {
-    const jsonData = [
-      { name: 'John', age: 30, city: 'New York' },
-      { name: 'Alice', age: 25, city: 'Los Angeles' },
-      { name: 'Bob', age: 35, city: 'Chicago' },
-    ];
-
-    const outputPath = 'D:/CathyLi/IT - Projet/Seb/Mes projets/csv-converter/chemin/output.csv';
-    await this.converterService.convertJsonToCsv(jsonData, outputPath);
-    return `CSV file generated at ${outputPath}`;
-  }
 }
