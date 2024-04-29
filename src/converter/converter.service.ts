@@ -12,8 +12,6 @@ export class ConverterService {
       fs.createReadStream(filePath)
         .pipe(csvParser())
         .on('data', (data) => {
-    
-          // Traitement des données
           const name = (data.first_name && data.last_name) ? `${data.first_name} ${data.last_name}` : data.email;
           delete data.first_name;
           delete data.last_name;
@@ -30,7 +28,6 @@ export class ConverterService {
           }
   
           results.push(data);
-          // console.log(data);
         })
         .on('end', () => {
           resolve(results);

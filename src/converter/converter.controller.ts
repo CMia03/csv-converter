@@ -16,6 +16,7 @@ import { createReadStream, createWriteStream } from 'fs';
 import { Express } from 'express';
 import { join } from 'path'; 
 import * as nodemailer from 'nodemailer';
+import * as uuid from 'uuid';
 
 @Controller('converter')
 export class ConverterController {
@@ -23,15 +24,11 @@ export class ConverterController {
   constructor(private readonly converterService: ConverterService) {
     this.transporter = nodemailer.createTransport({
       host: process.env.HOST_SMTP,
-      port: 587,
+      port: 465,
       secure: true,
       auth: {
           user: process.env.IDENTIFIANT_SMTP, 
           pass: process.env.SMTP_PASS,
-      },
-      tls: {
-        ciphers: 'SSLv3',
-        rejectUnauthorized: false
       }
   })
   }
@@ -41,6 +38,7 @@ export class ConverterController {
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @Res() res: Response,
+    @Body('destinataire') destinataire: string
   ) {
     try {
       if (!file) {
@@ -48,7 +46,10 @@ export class ConverterController {
       }
       const filePath = file.path;
       const convertedFileName = await this.converterService.parseCsv(filePath);
-      const outputPath = 'D:/CathyLi/IT - Projet/Seb/Mes projets/csv-converter/chemin/output.csv';
+      const uniqueId = uuid.v4(); 
+      const timestamp = new Date().getTime(); 
+
+      const outputPath = `D:/CathyLi/IT - Projet/Seb/Mes projets/csv-converter/chemin/contrat_${timestamp}_${uniqueId}.csv`;
       const json = []
 
       convertedFileName.forEach(element => {
@@ -72,15 +73,15 @@ export class ConverterController {
       await this.converterService.convertToCsvFile(json, outputPath);
       const mailOptions = {
         from: process.env.IDENTIFIANT_SMTP, 
-        to: 'cathyliantsoa9@gmail.com',
+        to: destinataire,
         subject: 'Mail de test',
         text: 'Voici votre fichier CSV en pièce jointe.',
-        // attachments: [
-        //   {
-        //     filename: 'output.csv',
-        //     path: outputPath
-        //   }
-        // ]
+        attachments: [
+          {
+            filename: `contrat_${timestamp}_${uniqueId}.csv`,
+            path: outputPath
+          }
+        ]
       };
 
       const resultat = await this.transporter.sendMail(mailOptions)
