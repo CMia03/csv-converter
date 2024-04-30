@@ -48,8 +48,8 @@ export class ConverterController {
       const uniqueId = uuid.v4();
       const timestamp = new Date().getTime();
 
-      // const outputPath = `D:/CathyLi/IT - Projet/Seb/Mes projets/csv-converter/chemin/contrat_${timestamp}_${uniqueId}.csv`;
-      const outputPath = `D:/IT-Project/Doc/convert/chemin/contrat_${timestamp}_${uniqueId}.csv`;
+      //changer le chemin vers un chemin distant
+      const outputPath = `D:/IT-Project/Doc/convert/chemin/contrat_${timestamp}_${uniqueId}.csv`; 
       const json = [];
       let incrementIndex = 1;
 
