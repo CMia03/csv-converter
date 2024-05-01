@@ -66,9 +66,9 @@ export class ConverterService {
       fs.createReadStream(filePath)
         .pipe(csvParser())
         .on('data', (data) => {
-          const street = (data.street && data.shipping_street_number) ? `${data.street} ${data.shipping_street_number}` : "";
+          const street = (data.street && data.billing_street_number) ? `${data.street} ${data.billing_street_number}` : "";
           delete data.street;
-          delete data.shipping_street_number;
+          delete data.billing_street_number;
           data.street = street;
 
           if (data.vat) {
