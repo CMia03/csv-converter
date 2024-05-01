@@ -40,7 +40,7 @@ export class ConverterService {
 
   async convertToCsvFile(data: any[], outputPath: string): Promise<void> {
     try {
-      const fields = ["id", "x-studio-id-woocommerce", "x-studio-refc", "x-studio-user-login", "email", "x-studio-date-enregistrement", "phone", "x-studio-source", "company_type", "category_id", "type", "name"];
+      const fields = ["id", "x_studio_id_woocommerce", "x_studio_refc", "x_studio_user_login", "name","email", "x_studio_date_enregistrement", "phone", "x_studio_source", "company_type", "category_id", "type"];
       const opts = { fields, delimiter: ';' };
       const csv = json2csv.parse(data, opts);
       const outputStream = createWriteStream(outputPath);
