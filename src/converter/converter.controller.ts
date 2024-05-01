@@ -33,7 +33,7 @@ export class ConverterController {
   })
   }
 
-  @Post('/import')
+  @Post('/import-contact')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
@@ -74,11 +74,11 @@ export class ConverterController {
       const mailOptions = {
         from: process.env.IDENTIFIANT_SMTP, 
         to: destinataire,
-        subject: 'Mail de test',
+        subject: 'Information contact woocommerce pour Odoo(fichier traité)',
         text: 'Voici votre fichier CSV en pièce jointe.',
         attachments: [
           {
-            filename: `contrat_${timestamp}_${uniqueId}.csv`,
+            filename: `contrat_${timestamp}_${uniqueId}.csv`, //nom ficher entrer - modified
             path: outputPath
           }
         ]
