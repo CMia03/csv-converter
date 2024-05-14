@@ -75,7 +75,7 @@ export class ConverterController {
 
       //changer le chemin vers un chemin distant
       // const outputPath = `D:/IT-Project/Doc/convert/chemin/contrat_${timestamp}_${uniqueId}_modified.csv`; 
-      const outputPath = `D:/CathyLi/IT - Projet/Seb/Mes projets/csv-converter/contact/chemin/contrat_${timestamp}_modified.csv`;
+      const outputPath = `D:/IT-Project/Doc/file/contrat_${timestamp}_modified.csv`;
 
       const json = [];
       let incrementIndex = 1;
