@@ -1,11 +1,67 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import * as csvParser from 'csv-parser';
 import * as fs from 'fs';
 import { createReadStream, createWriteStream } from 'fs';
 import * as json2csv from 'json2csv';
+import { BadRequestException } from '@nestjs/common';
 
 @Injectable()
 export class ConverterService {
+  async uploadFile(files: string):Promise<any[]> {
+
+    // async uploadFile(files: Array<Express.Multer.File>) {
+    const file1 = files[0];
+    const file2 = files[1];
+
+    console.log(file1, file2);
+    const results = [];
+    return new Promise((resolve, reject) => {
+      fs.createReadStream(file1)
+        .pipe(csvParser())
+        .on('data', (data) => {
+          const name = (data.first_name && data.last_name) ? `${data.first_name} ${data.last_name}` : data.email;
+          delete data.first_name;
+          delete data.last_name;
+          data.name = name;
+  
+          if (data.x_studio_date_enregistrement) {
+            const dateRegistered = new Date(data.x_studio_date_enregistrement);
+            const formattedDate = dateRegistered.toISOString().split('T')[0];
+            data.x_studio_date_enregistrement = formattedDate;
+          }
+  
+          if (data.phone) {
+            data.phone = data.phone.replace(/\D/g, '');
+          }
+  
+          console.log(data)
+          results.push(data);
+        })
+        .on('end', () => {
+          resolve(results);
+        })
+        .on('error', (error) => {
+          reject(error);
+        });
+    });
+
+    
+    
+    if (!file1) {
+      throw new BadRequestException('Aucun fichier recto fourni.');
+    }
+    // const fileExt1 = extname(file1.originalname).toLowerCase();
+    // const fileName1 = `${file1.originalname.split('.')[0]}_${transactionID}${fileExt1}`;
+    // const filePath1 = `/cin/cin_upload/${fileName1}`;
+    // const fileLink1 = `${process.env.HOST_LINK}/${filePath1}`;
+  
+    // // Traitement du fichier 2 (carte d'identité verso)
+    // const fileExt2 = extname(file2.originalname).toLowerCase();
+    // const fileName2 = `${file2.originalname.split('.')[0]}_${transactionID}${fileExt2}`;
+    // const filePath2 = `/cin/cin_upload/${fileName2}`;
+    // const fileLink2 = `${process.env.HOST_LINK}/${filePath2}`;  
+   
+  }
   async parseCsv(filePath: string): Promise<any[]> {
     const results = [];
     return new Promise((resolve, reject) => {

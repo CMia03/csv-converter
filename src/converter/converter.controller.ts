@@ -5,12 +5,14 @@ import {
   Body,
   Res,
   UploadedFile,
+  UploadedFiles,
   UseInterceptors,
   BadRequestException,
 } from '@nestjs/common';
 import { ConverterService } from './converter.service';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { createReadStream, createWriteStream } from 'fs';
 import { Express } from 'express';
 import { join } from 'path';
@@ -33,6 +35,28 @@ export class ConverterController {
     });
   }
 
+  @Post('/import-contact-all')
+  @UseInterceptors(FilesInterceptor('files'))
+  async uploadAllFile(
+    @UploadedFiles() files: Express.Multer.File,
+    @Res() res: Response,
+    @Body('destinataire') destinataire: string,
+  ) {
+    console.log(files);
+    const filePath = files.path;
+    const response = await this.converterService.uploadFile(filePath);
+    try {
+      return res.status(200).json({
+        status: true,
+        data: response,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        status: false,
+        message: error.message,
+      });
+    }
+}
   @Post('/import-contact')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
