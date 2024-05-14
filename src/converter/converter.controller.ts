@@ -56,7 +56,7 @@ export class ConverterController {
         message: error.message,
       });
     }
-}
+  }
   @Post('/import-contact')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
@@ -74,8 +74,15 @@ export class ConverterController {
       const timestamp = new Date().getTime();
 
       //changer le chemin vers un chemin distant
-      // const outputPath = `D:/IT-Project/Doc/convert/chemin/contrat_${timestamp}_${uniqueId}_modified.csv`; 
-      const outputPath = `D:/IT-Project/Doc/file/contrat_${timestamp}_modified.csv`;
+      // const outputPath = `D:/IT-Project/Doc/convert/chemin/contrat_${timestamp}_${uniqueId}_modified.csv`;
+      // const outputPath = `/uploads/contrat_${timestamp}_modified.csv`;
+      const path = require('path');
+
+      const outputPath = path.join(
+        'uploads',
+        'chemin',
+        `contrat_${timestamp}_modified.csv`,
+      );
 
       const json = [];
       let incrementIndex = 1;
@@ -92,7 +99,9 @@ export class ConverterController {
         }
         // Convertir le name si tout en majuscules
         if (element.name === element.name.toUpperCase()) {
-          element.name = element.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+          element.name = element.name
+            .toLowerCase()
+            .replace(/\b\w/g, (c) => c.toUpperCase());
         }
         const jsonObj = {
           id: element.id,
@@ -121,9 +130,9 @@ export class ConverterController {
         attachments: [
           {
             filename: `contrat_${timestamp}_- modified.csv`, //nom ficher entrer - modified
-            path: outputPath
-          }
-        ]
+            path: outputPath,
+          },
+        ],
       };
 
       const resultat = await this.transporter.sendMail(mailOptions);
@@ -155,12 +164,20 @@ export class ConverterController {
         throw new Error('No file uploaded.');
       }
       const filePath = file.path;
-      const convertedFileName = await this.converterService.parseCsvLivraison(filePath);
+      const convertedFileName =
+        await this.converterService.parseCsvLivraison(filePath);
       const uniqueId = uuid.v4();
       const timestamp = new Date().getTime();
 
       //changer le chemin vers un chemin distant
-      const outputPath = `D:/CathyLi/IT - Projet/Seb/Mes projets/csv-converter/livraison/chemin/contrat_livr_slk_${timestamp}_modified.csv`;
+      const path = require('path');
+
+      const outputPath = path.join(
+        'uploads',
+        'chemin',
+        `contrat_livr_slk_${timestamp}_modified.csv`,
+      );
+     
       const json = [];
       let incrementIndex = 1;
 
@@ -170,24 +187,24 @@ export class ConverterController {
           const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
           const result = `contacts_livr_slk_${today}_${incrementIndex.toString().padStart(3, '0')}`;
           const resultParent = `contacts_slk_${today}_${incrementIndex.toString().padStart(3, '0')}`;
-          const newParent = resultParent
+          const newParent = resultParent;
           const newIdOdoo = result;
-          element["parent_id/id"] = newParent
+          element['parent_id/id'] = newParent;
           element.id = newIdOdoo;
           // Incrémenter l'index d'incrémentation
           incrementIndex++;
         }
         const jsonObj = {
-          "parent_id/id": element["parent_id/id"],
+          'parent_id/id': element['parent_id/id'],
           id: element.id,
-          name: element.name, 
-          street: element.street, 
-          street2: element.street2, 
-          zip: element.zip, 
-          city: element.city, 
-          country_id: element.country_id, 
-          company_type: element.type, 
-          type: element.type
+          name: element.name,
+          street: element.street,
+          street2: element.street2,
+          zip: element.zip,
+          city: element.city,
+          country_id: element.country_id,
+          company_type: element.type,
+          type: element.type,
         };
         json.push(jsonObj);
       });
@@ -201,9 +218,9 @@ export class ConverterController {
         attachments: [
           {
             filename: `contrat_livr_slk_${timestamp}_modified.csv`, //nom ficher entrer - modified
-            path: outputPath
-          }
-        ]
+            path: outputPath,
+          },
+        ],
       };
 
       const resultat = await this.transporter.sendMail(mailOptions);
@@ -235,12 +252,19 @@ export class ConverterController {
         throw new Error('No file uploaded.');
       }
       const filePath = file.path;
-      const convertedFileName = await this.converterService.parseCsvFacture(filePath);
+      const convertedFileName =
+        await this.converterService.parseCsvFacture(filePath);
       const uniqueId = uuid.v4();
       const timestamp = new Date().getTime();
 
       //changer le chemin vers un chemin distant
-      const outputPath = `D:/CathyLi/IT - Projet/Seb/Mes projets/csv-converter/facturation/chemin/contrat_fact_slk_${timestamp}_modified.csv`;
+      const path = require('path');
+
+      const outputPath = path.join(
+        'uploads',
+        'chemin',
+        `contrat_fact_slk_${timestamp}_modified.csv`,
+      );
       const json = [];
       let incrementIndex = 1;
 
@@ -250,25 +274,25 @@ export class ConverterController {
           const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
           const result = `contacts_fact_slk_${today}_${incrementIndex.toString().padStart(3, '0')}`;
           const resultParent = `contacts_slk_${today}_${incrementIndex.toString().padStart(3, '0')}`;
-          const newParent = resultParent
+          const newParent = resultParent;
           const newIdOdoo = result;
-          element["parent_id/id"] = newParent
+          element['parent_id/id'] = newParent;
           element.id = newIdOdoo;
           // Incrémenter l'index d'incrémentation
           incrementIndex++;
         }
         const jsonObj = {
-          "parent_id/id": element["parent_id/id"],
+          'parent_id/id': element['parent_id/id'],
           id: element.id,
-          name: element.name, 
-          vat: element.vat, 
-          street: element.street, 
-          street2: element.street2, 
-          zip: element.zip, 
-          city: element.city, 
-          country_id: element.country_id, 
-          company_type: element.type, 
-          type: element.type
+          name: element.name,
+          vat: element.vat,
+          street: element.street,
+          street2: element.street2,
+          zip: element.zip,
+          city: element.city,
+          country_id: element.country_id,
+          company_type: element.type,
+          type: element.type,
         };
         json.push(jsonObj);
       });
@@ -282,9 +306,9 @@ export class ConverterController {
         attachments: [
           {
             filename: `contrat_fact_slk_${timestamp}_modified.csv`, //nom ficher entrer - modified
-            path: outputPath
-          }
-        ]
+            path: outputPath,
+          },
+        ],
       };
 
       const resultat = await this.transporter.sendMail(mailOptions);
