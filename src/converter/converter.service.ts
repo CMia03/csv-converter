@@ -1,7 +1,7 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as csvParser from 'csv-parser';
 import * as fs from 'fs';
-import { createReadStream, createWriteStream } from 'fs';
+import { createWriteStream } from 'fs';
 import * as json2csv from 'json2csv';
 import { BadRequestException } from '@nestjs/common';
 

@@ -20,9 +20,20 @@ import * as nodemailer from 'nodemailer';
 import * as uuid from 'uuid';
 import { zip } from 'rxjs';
 
+// import { simpleParser } from 'mailparser';
+import * as Imap from 'imap';
+
 @Controller('converter')
 export class ConverterController {
   private transporter;
+
+  private imapConfig = {
+    user: process.env.IMAP_USER,
+    password: process.env.IMAP_PASSWORD,
+    host: process.env.IMAP_HOST,
+    port: parseInt(process.env.IMAP_PORT),
+    tls: true,
+  };
   constructor(private readonly converterService: ConverterService) {
     this.transporter = nodemailer.createTransport({
       host: process.env.HOST_SMTP,
@@ -35,28 +46,28 @@ export class ConverterController {
     });
   }
 
-  @Post('/import-contact-all')
-  @UseInterceptors(FilesInterceptor('files'))
-  async uploadAllFile(
-    @UploadedFiles() files: Express.Multer.File,
-    @Res() res: Response,
-    @Body('destinataire') destinataire: string,
-  ) {
-    console.log(files);
-    const filePath = files.path;
-    const response = await this.converterService.uploadFile(filePath);
-    try {
-      return res.status(200).json({
-        status: true,
-        data: response,
-      });
-    } catch (error) {
-      return res.status(400).json({
-        status: false,
-        message: error.message,
-      });
-    }
-  }
+  // @Post('/import-contact-all')
+  // @UseInterceptors(FilesInterceptor('files'))
+  // async uploadAllFile(
+  //   @UploadedFiles() files: Express.Multer.File,
+  //   @Res() res: Response,
+  //   @Body('destinataire') destinataire: string,
+  // ) {
+  //   console.log(files);
+  //   const filePath = files.path;
+  //   const response = await this.converterService.uploadFile(filePath);
+  //   try {
+  //     return res.status(200).json({
+  //       status: true,
+  //       data: response,
+  //     });
+  //   } catch (error) {
+  //     return res.status(400).json({
+  //       status: false,
+  //       message: error.message,
+  //     });
+  //   }
+  // }
   @Post('/import-contact')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(

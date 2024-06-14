@@ -5,10 +5,12 @@ import { ConverterModule } from './converter/converter.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [ConverterModule,  
+  imports: [
+    ConverterModule,
     ConfigModule.forRoot({
-    isGlobal: true, // Permet d'injecter ConfigService dans tous les modules
-  }),],
+      isGlobal: true, // Permet d'injecter ConfigService dans tous les modules
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
